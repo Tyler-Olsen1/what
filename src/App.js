@@ -1,28 +1,42 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
 
-class App extends Component {
+
+class Home extends Component {
+
+    state = {
+        senators: []
+    }
+
+getSenators = async () => {
+    await fetch('https://raw.githubusercontent.com/CivilServiceUSA/us-senate/master/us-senate/data/us-senate.json')
+        .then(results => {
+        return results.json()
+        })
+        .then(data => {
+        this.setState({senators: data})
+        });
+    }
+//function does a fetch; we call that fetch 'data'; we bind that data to a state
+      
+async componentWillMount () {
+    await this.getSenators()
+    }
+
   render() {
+      console.log(this.state.senators)
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <div>
+        
+           {this.state.senators.map((senator, index) => (
+               <div key={index}>
+                  <h1>Name: {senator.name}, </h1>
+                    Party: {senator.party}
+               </div>
+           ))}
+       
+        </div>
     );
   }
 }
-
-export default App;
+{/* <home /> */}
+export default Home
